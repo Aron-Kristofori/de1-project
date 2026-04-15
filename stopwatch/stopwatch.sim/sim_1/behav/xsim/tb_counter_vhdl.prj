@@ -1,0 +1,7 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../stopwatch.srcs/sources_1/imports/counter.vhd" \
+"../../../../stopwatch.srcs/sim_1/imports/stopwatch.sim/counter_tb.vhd" \
+
+# Do not sort compile order
+nosort

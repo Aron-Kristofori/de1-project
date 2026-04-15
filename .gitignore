@@ -1,7 +1,6 @@
 # Složky s dočasnými daty a výsledky syntézy (Vivado je umí vytvořit znovu)
 *.cache/
 *.hw/
-*.sim/
 *.runs/
 *.ip_user_files/
 .Xil/
