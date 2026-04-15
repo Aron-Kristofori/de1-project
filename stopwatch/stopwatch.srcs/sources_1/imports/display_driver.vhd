@@ -50,8 +50,9 @@ architecture Behavioral of display_driver is
     signal sig_en : std_logic;
     signal sig_digit : std_logic_vector(2 downto 0);
     signal sig_bin :  std_logic_vector(3 downto 0);
-    signal sig_pmod : std_logic_vector(1 downto 0); -- will need to be
-    -- DONE: Add other needed signals
+    --signal sig_pmod : std_logic_vector(1 downto 0); -- will need to be changed, of course i forgot the about this...
+    signal sig_seg_decoded : std_logic_vector(6 downto 0); -- fixed! 
+  
 
 begin
 
@@ -111,21 +112,36 @@ begin
     seg <= b"100_0111" when (sig_digit = "111" and lap_ptr /= "0000") else sig_seg_decoded;
 
     ------------------------------------------------------------------------
-    -- Anode and DP select process, will do later! below is the old code for anode select, need to add DP control and lap 'L' control
+    -- DONE! Anode and DP select process, will do later! below is the old code for anode select, need to add DP control and lap 'L' control
     ------------------------------------------------------------------------
-    p_anode_select : process (sig_digit) is
+
+    p_anode_select : process (sig_digit, lap_ptr) is
     begin
+        -- Default values (everything OFF to prevent latches)
+        anode <= "11111111";
+        dp    <= '1'; 
+
         case sig_digit is
-            when "0" =>
-                anode <= "10";  -- Right digit active
-
-              when "1" =>
-                anode <= "01";  -- Left digit active
-            -- DONE: Add another anode selection(s)
-
+            when "000" => anode <= "11111110"; -- hh ones
+            when "001" => anode <= "11111101"; -- hh tens
+            when "010" => 
+                anode <= "11111011"; -- SS ones
+                dp    <= '0';        -- Turn ON Decimal Point!
+            when "011" => anode <= "11110111"; -- SS tens
+            when "100" => 
+                anode <= "11101111"; -- MM ones
+                dp    <= '0';        -- Turn ON Decimal Point!
+            when "101" => anode <= "11011111"; -- MM tens
+            when "110" =>
+                if lap_ptr /= "0000" then
+                    anode <= "10111111"; -- Lap number (only ON if lap_ptr > 0)
+                end if;
+            when "111" =>
+                if lap_ptr /= "0000" then
+                    anode <= "01111111"; -- 'L' character (only ON if lap_ptr > 0)
+                end if;
             when others =>
-                anode <= "11";  -- All off
+                anode <= "11111111";
         end case;
     end process;
-
 end Behavioral;
