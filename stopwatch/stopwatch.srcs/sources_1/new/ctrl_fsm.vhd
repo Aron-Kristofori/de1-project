@@ -38,19 +38,19 @@ entity ctrl_fsm is
            start : in STD_LOGIC;
            up : in STD_LOGIC;
            down : in STD_LOGIC;
-           lap_ptr : out STD_LOGIC_VECTOR (3 downto 0);
-           cnt_en : out STD_LOGIC);
+           lap_ptr : out STD_LOGIC_VECTOR (3 downto 0) := "0000";
+           cnt_en : out STD_LOGIC := '0');
 end ctrl_fsm;
 
 architecture Behavioral of ctrl_fsm is
 
 type ctrl_state is (STOPPED, RUNNING);
-signal current_state : ctrl_state;
-signal cnt_lap : integer range 0 to 9 := 0;
+signal current_state : ctrl_state := STOPPED;
 
 begin
 
     p_control : process (clk)
+    variable cnt_lap : integer := 0;
     begin
         if rising_edge(clk) then
             if rst = '1' then
@@ -71,11 +71,18 @@ begin
                         current_state <= STOPPED;
                  end case;
             elsif up = '1' then
-                cnt_lap <= cnt_lap + 1;
+                cnt_lap := cnt_lap + 1;
+                if cnt_lap > 9 then
+                    cnt_lap := 0;
+                    end if;
             elsif down = '1' then
-                cnt_lap <= cnt_lap - 1;
+                cnt_lap := cnt_lap - 1;
+                if cnt_lap < 0 then
+                    cnt_lap := 9;
+                    end if;
             end if;
          end if;
+         lap_ptr <= std_logic_vector(to_unsigned(cnt_lap, 4));
     end process p_control;   
-    lap_ptr <= STD_LOGIC_VECTOR(to_unsigned(cnt_lap, 4));
+    
 end Behavioral;
