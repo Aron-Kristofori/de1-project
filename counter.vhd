@@ -25,7 +25,7 @@ use ieee.numeric_std.all;  -- Package for data types conversion
 
 entity counter is
     generic ( 
-        G_MAX  : natural := 9;                  --! Max value before wrap-around
+        G_MAX  : positive := 9;                  --! Max value before wrap-around
         G_BITS : positive := 4                  --! Default number of bits
     );
     port (

@@ -27,7 +27,7 @@ architecture Behavioral of display_driver is
     -- Component declaration for binary counter, declaration fixed from edited counter.vhd
     component counter is
          generic ( 
-        G_MAX  : natural := 9;                  --! Max value before wrap-around
+        G_MAX  : positive := 9;                  --! Max value before wrap-around
         G_BITS : positive := 4                  --! Default number of bits
     );
     port (
@@ -50,7 +50,6 @@ architecture Behavioral of display_driver is
     signal sig_en : std_logic;
     signal sig_digit : std_logic_vector(2 downto 0);
     signal sig_bin :  std_logic_vector(3 downto 0);
-    --signal sig_pmod : std_logic_vector(1 downto 0); -- will need to be changed, of course i forgot the about this...
     signal sig_seg_decoded : std_logic_vector(6 downto 0); -- fixed! 
   
 
