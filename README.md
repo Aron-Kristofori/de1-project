@@ -7,4 +7,4 @@ Tento projekt implementuje digitálne stopky na desku Nexys A7-50T v jazyku VHDL
 - Áron Kristofori
 
 # Blokové schema
-![Blokové schema](./aktualni_schema.svg)
+![Blokové schema](./top_schematic.svg)
