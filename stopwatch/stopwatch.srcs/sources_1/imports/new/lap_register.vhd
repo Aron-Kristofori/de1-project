@@ -12,7 +12,7 @@ entity lap_register is
         time_in : in  std_logic_vector(23 downto 0);  -- 24-bit time from stopwatch
         
         -- Read interface (from FSM)
-        lap_ptr : in  std_logic_vector(4 downto 0);   -- 5-bit read address (0 to 31)
+        lap_ptr : in  std_logic_vector(3 downto 0);   -- 5-bit read address (0 to 31)
         
         -- Output to display multiplexer
         time_out : out std_logic_vector(23 downto 0) 

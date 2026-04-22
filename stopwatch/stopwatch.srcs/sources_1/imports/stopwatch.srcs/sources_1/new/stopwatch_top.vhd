@@ -9,6 +9,7 @@ entity stopwatch_top is
         btnd  : in  STD_LOGIC; -- Down
         btnc  : in  STD_LOGIC; -- Lap
         btnr  : in  STD_LOGIC; -- Start/Stop
+        sw    : in  STD_LOGIC_VECTOR (15 downto 0);
         
         seg   : out STD_LOGIC_VECTOR (6 downto 0);
         an    : out STD_LOGIC_VECTOR (7 downto 0);
@@ -58,14 +59,14 @@ architecture Structural of stopwatch_top is
     end component lap_register;
 
     -- 4. Stopwatch (Aron is writing this)
-    component stopwatch is
-        port (
-            clk   : in  std_logic;
-            rst   : in  std_logic;
-            en    : in  std_logic;
-            time_out  : out std_logic_vector(23 downto 0)
-        );
-    end component stopwatch;
+--    component stopwatch is
+--        port (
+--            clk   : in  std_logic;
+--            rst   : in  std_logic;
+--            en    : in  std_logic;
+--            time_out  : out std_logic_vector(23 downto 0)
+--        );
+--    end component stopwatch;
 
     -- 5. Clock (from previous labs)
     component clk_en is
@@ -99,12 +100,12 @@ architecture Structural of stopwatch_top is
     signal sig_btn_start : std_logic;
 
     -- FSM & Control signals -- jeste nejsou ve schematu, pokud budou jinak zmenit !! Update: DONE! uz jsou...
-    signal sig_cnt_en    : std_logic;
+--    signal sig_cnt_en    : std_logic;
     signal sig_lap_ptr   : std_logic_vector(3 downto 0);
     
     -- Timer & Enable signals
-    signal sig_ce           : std_logic;
-    signal sig_en : std_logic;
+--    signal sig_ce           : std_logic;
+--    signal sig_en : std_logic;
 
     -- Data buses
     signal sig_time : std_logic_vector(23 downto 0);
@@ -162,7 +163,7 @@ begin
             up      => sig_btn_up,
             down    => sig_btn_down,
             start   => sig_btn_start,
-            cnt_en  => sig_cnt_en,
+            cnt_en  => open,
             lap_ptr => sig_lap_ptr
         );
 
@@ -182,25 +183,25 @@ begin
     ------------------------------------------------------------------------
     -- Stopwatch Timer & Clock Enable
     ------------------------------------------------------------------------
-    ce_100Hz : clk_en
-        generic map ( G_MAX => 1_000_000 ) -- 100 Hz tick (10 ms) for the stopwatch
-        port map ( 
-            clk => clk, 
-            rst => btnl, 
-            ce => sig_ce
-             );
+--    ce_100Hz : clk_en
+--        generic map ( G_MAX => 1_000_000 ) -- 100 Hz tick (10 ms) for the stopwatch
+--        port map ( 
+--            clk => clk, 
+--            rst => btnl, 
+--            ce => sig_ce
+--             );
 
-    -- AND Gate for Stopwatch enable
-    sig_en <= sig_ce and sig_cnt_en;
+--    -- AND Gate for Stopwatch enable
+--    sig_en <= sig_ce and sig_cnt_en;
 
-    timer_0 : stopwatch
-        port map (
-            clk  => clk,
-            rst  => btnl,
-            en   => sig_en,
-            time_out => sig_time
-        );
-
+--    timer_0 : stopwatch
+--        port map (
+--            clk  => clk,
+--            rst  => btnl,
+--            en   => sig_en,
+--            time_out => sig_time
+--        );
+    sig_time <= "00000000" & sw;
     ------------------------------------------------------------------------
     -- Display Multiplexer & Driver
     ------------------------------------------------------------------------

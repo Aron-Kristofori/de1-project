@@ -5,7 +5,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity display_driver is
     Port ( clk : in STD_LOGIC;
            rst : in STD_LOGIC;
-           data : in STD_LOGIC_VECTOR (23 downto 0); --! 6 BCD digits (MM.SS.hh)
+           time_in : in STD_LOGIC_VECTOR (23 downto 0); --! 6 BCD digits (MM.SS.hh)
            lap_ptr : in STD_LOGIC_VECTOR (3 downto 0); --! State from FSM (0-8)
            dp  : out STD_LOGIC;                       --! Decimal points
            seg : out STD_LOGIC_VECTOR (6 downto 0);
@@ -88,12 +88,12 @@ begin
     ------------------------------------------------------------------------
     -- Digit select (Routing the 24-bit bus)
     ------------------------------------------------------------------------
-    sig_bin <= data(3 downto 0)   when sig_digit = "000" else  -- hh ones
-               data(7 downto 4)   when sig_digit = "001" else  -- hh tens
-               data(11 downto 8)  when sig_digit = "010" else  -- SS ones
-               data(15 downto 12) when sig_digit = "011" else  -- SS tens
-               data(19 downto 16) when sig_digit = "100" else  -- MM ones
-               data(23 downto 20) when sig_digit = "101" else  -- MM tens
+    sig_bin <= time_in(3 downto 0)   when sig_digit = "000" else  -- hh ones
+               time_in(7 downto 4)   when sig_digit = "001" else  -- hh tens
+               time_in(11 downto 8)  when sig_digit = "010" else  -- SS ones
+               time_in(15 downto 12) when sig_digit = "011" else  -- SS tens
+               time_in(19 downto 16) when sig_digit = "100" else  -- MM ones
+               time_in(23 downto 20) when sig_digit = "101" else  -- MM tens
                lap_ptr            when sig_digit = "110" else  -- Lap number
                "0000";                                         -- Dig 7 dummy value
     ------------------------------------------------------------------------
@@ -108,7 +108,7 @@ begin
 
         -- Inject the 'L' character on digit 7 if a lap is being displayed
     -- 'L' = segments d, e, f are ON (0), others are OFF (1). check this tommorow!
-    seg <= b"100_0111" when (sig_digit = "111" and lap_ptr /= "0000") else sig_seg_decoded;
+    seg <= b"111_0001" when (sig_digit = "111" and lap_ptr /= "0000") else sig_seg_decoded;
 
     ------------------------------------------------------------------------
     -- DONE! Anode and DP select process, will do later! below is the old code for anode select, need to add DP control and lap 'L' control
