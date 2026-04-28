@@ -1,17 +1,25 @@
-# Projekt: Digitálne stopky 
-Tento projekt implementuje digitálne stopky na desku Nexys A7-50T v jazyku VHDL. Stopky merajú čas s presnosťou na stotiny sekundy a umožňujú zmerať čas jednotlivých kôl bez prerušenia merania na pozadí.
+# Group project: Digital stopwatch
+This group project will implement a digital stopwatch using VHDL and a Nexys A7-50T FPGA dev board. The stopwatch measures time with accuracy to hundredths of a second with a function to store laps.
 
-# Členovia týmu
+# Group members
 - Tomáš Kovařík
 - Maroš Kožár
 - Áron Kristofori
 
-# Blokové schema
-![Blokové schema](./top_schematic.svg)
+# Top-Level schematic
+![Top-Level schematic](./res/top_schematic.png)
 
-# Komponenta `ctrl_fsm` 
-Tento modul má na starosti spracovávanie vstupov z tlačidiel a ovládanie stavu hodiniek. S prostredným tlačidlom `btnc` sa spúšťájú a zastavujú stopky. Tento proces sa ovláda pomocou výstupného signálu `sig_cnt_en` ktorý je privedený spolu s hodinovým signálom na vstup čítača. Tlačítká `btnd` a `btnu` nám dovolia prepínať medzi jednotlivými kolami uloženými v pamäti komponenty `lap_register`.
+# Description of components
+- [`stopwatch_top.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sources_1/new/stopwatch_top.vhd) (Top-Level): connects together all the components. Receives input from physical buttons and outputs to the seven-segment display. Internal signals route information between the components.
+- [`clk_en.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sources_1/imports/new/clk_en.vhd): Divides the main clock frequency of 100MHz to desired value specified during component instantiation.
+- [`debounce.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sources_1/imports/debounce.vhd): Filters the mechanical imperfections of a button press, where the contacts rapidly transition between open and closed state, and provides a single impulse on the output.
+- [`display_driver.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sources_1/imports/display_driver.vhd): Takes a 24-bit vector with BCD coded representation of the measured time. And a 4-bit lap "pointer" which tells the user which lap is being displayed. The format is `Lx mm:ss.ss`.
+- [`ctrl_fsm.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sources_1/new/ctrl_fsm.vhd): It handles starting and stopping the timer itself and navigating the saved laps stored in `lap_register`.
+- [`lap_register.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/new/lap_register.vhd): Upon receiving input from `lap_we` input saves the time from the counter on `time_in` input. Displays the requested time from memory on output `time_out` using `lap_ptr`.
 
-## Testovanie komponenty
-![Screenshot z testbenchu](./res/tb_ctrl_fsm_wave.png)
-Na začiatku behu testbenchu sme stav komponenty vynulovali pomocou `rst` signálu. Potom dvoma impulzmi na vstupe `start` sme výskúšali funkčnosť riadiaceho výstupu `cnt_en`. Ako ďaľšie bolo potrebné otestovať funkcionalitu `lap_ptr`. Výstupný signál si odoberá hodnotu z unsigned premennej v komponente ktorá sa inkrementuje/dekrementuje pomocou signálov na vstupoch `up`/`down`. Overili sme aj funkcionalitu pretečenia pri dosiahnutí krajných hodnôt 0 a 9.
+
+# Simulation
+## [`ctrl_fsm`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sim_1/new/ctrl_fsm_tb.vhd)
+![Wave window of simulation for ctrl_fsm component](./res/tb_ctrl_fsm_wave.png)
+
+Firstly, we reset all the variables and state of the component by holding the `rst` line HIGH. Then we test out the functionality of `cnt_en` output by sending two button presses to `start` input. The first one turns on the `cnt_en` signalling that the counter should be engaged and the next one disables the output. In the last part of the simulation, we test out the `lap_ptr` output. It outputs a variable instantiated inside the component which is incremented/decremneted by sending button presses to `up`/`down` inputs. It counts from to 0 to 9 and then overflows to the opposite end.
