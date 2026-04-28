@@ -15,21 +15,17 @@ entity lap_register is
         lap_ptr : in  std_logic_vector(3 downto 0);   -- 5-bit read address (0 to 31)
         
         -- Output to display multiplexer
-        time_out : out std_logic_vector(23 downto 0) 
+        time_out : out std_logic_vector(23 downto 0) := (others => '0')
     );
 end lap_register;
 
 architecture Behavioral of lap_register is
 
-    -- 1. Define the Memory Array (32 slots of 24 bits)
-    type t_memory is array (0 to 31) of std_logic_vector(23 downto 0);
+    type t_memory is array (0 to 9) of std_logic_vector(23 downto 0);
     signal mem : t_memory := (others => (others => '0'));
     
 begin
 
-    ------------------------------------------------------------------------
-    -- Fully Synchronous Process (Write and Read)
-    ------------------------------------------------------------------------
     p_lap_memory : process(clk)
     variable write_ptr : integer := 1;
     begin
@@ -43,7 +39,7 @@ begin
                 time_out  <= (others => '0');
                 
             else
-                -- Synchronous Write: Save lap if button is pressed
+                --  Save lap if button is pressed
                 if lap_we = '1' then
                     if write_ptr <= 9 then
                         mem(write_ptr) <= time_in;
@@ -51,7 +47,7 @@ begin
                     end if;
                 end if;
                 
-                -- Synchronous Read: Always output the requested lap
+                --  Always output the requested lap
                 time_out <= mem(to_integer(unsigned(lap_ptr)));
                 
             end if;
