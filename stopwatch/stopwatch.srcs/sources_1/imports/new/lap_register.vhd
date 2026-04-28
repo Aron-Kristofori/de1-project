@@ -25,30 +25,30 @@ architecture Behavioral of lap_register is
     type t_memory is array (0 to 31) of std_logic_vector(23 downto 0);
     signal mem : t_memory := (others => (others => '0'));
     
-    -- 2. Define the Internal Write Pointer
-    signal write_ptr : unsigned(4 downto 0) := (others => '0');
-
 begin
 
     ------------------------------------------------------------------------
     -- Fully Synchronous Process (Write and Read)
     ------------------------------------------------------------------------
     p_lap_memory : process(clk)
+    variable write_ptr : integer := 1;
     begin
         -- Test of clock rising edge
         if rising_edge(clk) then
             
             -- Synchronous reset
             if rst = '1' then
-                write_ptr <= (others => '0');
+                write_ptr := 1;
                 mem       <= (others => (others => '0')); 
                 time_out  <= (others => '0');
                 
             else
                 -- Synchronous Write: Save lap if button is pressed
                 if lap_we = '1' then
-                    mem(to_integer(write_ptr)) <= time_in;
-                    write_ptr <= write_ptr + 1;
+                    if write_ptr <= 9 then
+                        mem(write_ptr) <= time_in;
+                        write_ptr := write_ptr + 1;
+                    end if;
                 end if;
                 
                 -- Synchronous Read: Always output the requested lap

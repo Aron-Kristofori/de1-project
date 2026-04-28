@@ -23,3 +23,4 @@ This group project will implement a digital stopwatch using VHDL and a Nexys A7-
 ![Wave window of simulation for ctrl_fsm component](./res/tb_ctrl_fsm_wave.png)
 
 Firstly, we reset all the variables and state of the component by holding the `rst` line HIGH. Then we test out the functionality of `cnt_en` output by sending two button presses to `start` input. The first one turns on the `cnt_en` signalling that the counter should be engaged and the next one disables the output. In the last part of the simulation, we test out the `lap_ptr` output. It outputs a variable instantiated inside the component which is incremented/decremneted by sending button presses to `up`/`down` inputs. It counts from to 0 to 9 and then overflows to the opposite end.
+
