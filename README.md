@@ -29,7 +29,7 @@ Firstly, we reset all the variables and state of the component by holding the `r
 
 The `clk` signal is incrementing the displayed time on every rising edge. The displayed hex values of `time_out` output correspond to what is shown on the seven-segment display. The stopwatch correctly handles carrying from seconds to a minute as is shown in the simulation output.
 
-## ['lap_register'](./stopwatch/stopwatch.srcs/sim_1/new/lap_register_tb.vhd)
+## [`lap_register`](./stopwatch/stopwatch.srcs/sim_1/new/lap_register_tb.vhd)
 ![Wave window of simulation for stopwatch component](./res/tb_lap_register1.png)
 
 In the first phase we fill up all 9 slots of the memory array in the lap register. After that we test if we are properly handing repeated button presses on the input `lap_we` when the array is full. The component does not write into memory anything new. Lastly, we send a few random indexes on `lap_ptr` input and see if the corresponding time in the register is displayed.
