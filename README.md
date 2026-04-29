@@ -35,3 +35,12 @@ The `clk` signal is incrementing the displayed time on every rising edge. The di
 In the first phase we fill up all 9 slots of the memory array in the lap register. After that we test if we are properly handing repeated button presses on the input `lap_we` when the array is full. The component does not write into memory anything new. Lastly, we send a few random indexes on `lap_ptr` input and see if the corresponding time in the register is displayed.
 
 ![Wave windows of simulation for stopwatch component, display correct times on output](./res/tb_lap_register2.png)
+
+
+## [`display_driver`](./stopwatch/stopwatch.srcs/sim_1/new/display_driver_tb.vhd)
+![Wave window of simulation for display_driver component](./res/display_driver_tb.png)
+
+Firstly, we reset the component and its internal clock enable counters by holding the `rst` line HIGH. Then, we test the standard stopwatch display mode by feeding a 24-bit hex test value (e.g., x"123456") into the `time_in` while leaving the `lap_ptr` at 0. The waveform confirms that the multiplexing works correctly: the anode output continuously sweeps through active-low states (fe, fd, fb, etc.) to sequentially enable each digit. Simultaneously, the `seg` output accurately decodes the corresponding 4-bit slice of the input data, and the `dp` output pulses LOW at the correct intervals to format the time as mm.ss.ss. In the last part of the simulation, we test the lap-viewing functionality by inputting a new time value and setting the `lap_ptr` to a non-zero value (e.g., 3). The simulation proves that the driver correctly handles this by activating the uppermost anodes to display the 'L' character on the leftmost digit and the requested lap number next to it. 
+
+
+
