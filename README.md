@@ -11,6 +11,10 @@ This group project will implement a digital stopwatch using VHDL and a Nexys A7-
 
 # Description of components
 - [`stopwatch_top.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sources_1/new/stopwatch_top.vhd) (Top-Level): connects together all the components. Receives input from physical buttons and outputs to the seven-segment display. Internal signals route information between the components.
+- [`counter.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sources_1/imports/counter.vhd)
+N-bit synchronous up counter with enable and carry output.
+- [`bin2seg.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sources_1/imports/bin2seg.vhd)
+Turns the binary representation of hex digits into a binary sequence which represents the segments in a seven-segment display.
 - [`clk_en.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sources_1/imports/new/clk_en.vhd): Divides the main clock frequency of 100MHz to desired value specified during component instantiation.
 - [`debounce.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sources_1/imports/debounce.vhd): Filters the mechanical imperfections of a button press, where the contacts rapidly transition between open and closed state, and provides a single impulse on the output.
 - [`display_driver.vhd`](./stopwatch/stopwatch.srcs/sources_1/imports/stopwatch.srcs/sources_1/imports/display_driver.vhd): Takes a 24-bit vector with BCD coded representation of the measured time. And a 4-bit lap "pointer" which tells the user which lap is being displayed. The format is `Lx mm:ss.ss`.
