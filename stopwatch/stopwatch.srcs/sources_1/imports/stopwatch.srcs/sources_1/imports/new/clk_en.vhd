@@ -3,7 +3,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 ----------------------------------------------------------------------------------
 entity clk_en is
 
-generic ( G_MAX : positive  := 5); -- proc positive, kdyz ma pocitat 0 az 4???, nema to byt spis natural?
+generic ( G_MAX : positive  := 5);
     Port ( clk : in STD_LOGIC;
            rst : in STD_LOGIC;
            ce : out STD_LOGIC);
@@ -15,7 +15,6 @@ architecture Behavioral of clk_en is
     signal sig_cnt : integer range 0 to G_MAX-1;
 
 begin
-
     -- Count clock pulses and generate a one-clock-cycle enable pulse
     process (clk) is
     begin
@@ -25,7 +24,6 @@ begin
                 sig_cnt <= 0;     -- Reset internal counter
 
             elsif sig_cnt = G_MAX-1 then
-                -- TODO: Set output pulse and reset internal counter
                 ce <=  '1';
                 sig_cnt <= 0;
             else

@@ -25,7 +25,7 @@ use ieee.numeric_std.all;  -- Package for data types conversion
 
 entity counter is
     generic ( 
-        G_MAX  : positive := 9;                  --! Max value before wrap-around
+        G_MAX  : positive := 9;                 --! Max value before wrap-around
         G_BITS : positive := 4                  --! Default number of bits
     );
     port (
@@ -44,7 +44,7 @@ architecture Behavioral of counter is
     -- Maximum counter value = 2^G_BITS - 1
     -- constant C_MAX : integer := 2**G_BITS - 1;
 
-   -- Parameterizable Modulo G_MAX+1 up counter
+    -- Parameterizable Modulo G_MAX+1 up counter
 
     -- Integer counter with defined range
    signal sig_cnt : integer range 0 to G_MAX;

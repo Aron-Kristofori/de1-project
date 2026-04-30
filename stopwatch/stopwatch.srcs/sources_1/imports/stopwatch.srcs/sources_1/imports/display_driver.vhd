@@ -5,11 +5,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity display_driver is
     Port ( clk : in STD_LOGIC;
            rst : in STD_LOGIC;
-           time_in : in STD_LOGIC_VECTOR (23 downto 0); --! 6 BCD digits (MM.SS.hh)
-           lap_ptr : in STD_LOGIC_VECTOR (3 downto 0); --! State from FSM (0-8)
-           dp  : out STD_LOGIC;                       --! Decimal points
-           seg : out STD_LOGIC_VECTOR (6 downto 0);
-           anode : out STD_LOGIC_VECTOR (7 downto 0)); --! 8 anodes
+           time_in : in STD_LOGIC_VECTOR (23 downto 0); --! 6 BCD digits (mm:ss.ss)
+           lap_ptr : in STD_LOGIC_VECTOR (3 downto 0);  --! State from FSM (0-8)
+           dp  : out STD_LOGIC;                         --! Decimal points
+           seg : out STD_LOGIC_VECTOR (6 downto 0);     --! 7 segments
+           anode : out STD_LOGIC_VECTOR (7 downto 0));  --! 8 anodes
 end display_driver;
 ----------------------------------------------------------------------------------
 architecture Behavioral of display_driver is
@@ -59,9 +59,9 @@ begin
     -- Clock enable generator for refresh timing
     ------------------------------------------------------------------------
     clock_0 : clk_en
-        generic map ( G_MAX => 100_000 )  -- Adjust for flicker-free multiplexing, UPDATE: 1ms tick for 1kHz refresh rate - need to test it
-        port map (                  -- For simulation: 8
-            clk => clk,             -- For implementation: 80_000_000 -- from the lab 
+        generic map ( G_MAX => 100_000 )  -- 1ms tick for 1kHz refresh rate
+        port map (                  
+            clk => clk,              
             rst => rst,
             ce  => sig_en
         );
@@ -76,43 +76,29 @@ begin
             rst => rst,
             en  => sig_en,
             cnt => sig_digit,
-            carry_out => open -- We dont need carry_out for the multiplexer I guess?
+            carry_out => open
         );
 
-    ------------------------------------------------------------------------
-    -- Digit select, not deleting this, will do tomorrow!
-    ------------------------------------------------------------------------
-   -- sig_bin <= data(3 downto 0) when sig_digit = "0" else
-   --            data(7 downto 4);
-
-    ------------------------------------------------------------------------
-    -- Digit select (Routing the 24-bit bus)
-    ------------------------------------------------------------------------
-    sig_bin <= time_in(3 downto 0)   when sig_digit = "000" else  -- hh ones
-               time_in(7 downto 4)   when sig_digit = "001" else  -- hh tens
-               time_in(11 downto 8)  when sig_digit = "010" else  -- SS ones
-               time_in(15 downto 12) when sig_digit = "011" else  -- SS tens
-               time_in(19 downto 16) when sig_digit = "100" else  -- MM ones
-               time_in(23 downto 20) when sig_digit = "101" else  -- MM tens
-               lap_ptr            when sig_digit = "110" else  -- Lap number
-               "0000";                                         -- Dig 7 dummy value
+    sig_bin <= time_in(3 downto 0)   when sig_digit = "000" else  -- hundredths
+               time_in(7 downto 4)   when sig_digit = "001" else  -- tenths
+               time_in(11 downto 8)  when sig_digit = "010" else  -- seconds
+               time_in(15 downto 12) when sig_digit = "011" else  -- tens of seconds
+               time_in(19 downto 16) when sig_digit = "100" else  -- minutes
+               time_in(23 downto 20) when sig_digit = "101" else  -- tens of minutes
+               lap_ptr            when sig_digit = "110" else     -- Lap number
+               "0000";                                            -- Dig 7 dummy value
     ------------------------------------------------------------------------
     -- 7-segment decoder
     ------------------------------------------------------------------------
     decoder_0 : bin2seg
         port map (
             bin => sig_bin,
-            seg => sig_seg_decoded  -- Route to our intercept signal, because for the the L for laps 
+            seg => sig_seg_decoded  -- Route to our intercept signal, because for the L for laps 
 
         );
 
         -- Inject the 'L' character on digit 7 if a lap is being displayed
-    -- 'L' = segments d, e, f are ON (0), others are OFF (1). check this tommorow!
     seg <= b"111_0001" when (sig_digit = "111" and lap_ptr /= "0000") else sig_seg_decoded;
-
-    ------------------------------------------------------------------------
-    -- DONE! Anode and DP select process, will do later! below is the old code for anode select, need to add DP control and lap 'L' control
-    ------------------------------------------------------------------------
 
     p_anode_select : process (sig_digit, lap_ptr) is
     begin

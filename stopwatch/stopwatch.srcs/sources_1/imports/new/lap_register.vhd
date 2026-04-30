@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.NUMERIC_STD.ALL; -- Needed for unsigned math (pointers)
+use IEEE.NUMERIC_STD.ALL;
 
 entity lap_register is
     Port ( 
@@ -12,7 +12,7 @@ entity lap_register is
         time_in : in  std_logic_vector(23 downto 0);  -- 24-bit time from stopwatch
         
         -- Read interface (from FSM)
-        lap_ptr : in  std_logic_vector(3 downto 0);   -- 5-bit read address (0 to 31)
+        lap_ptr : in  std_logic_vector(3 downto 0);   -- 4-bit read address
         
         -- Output to display multiplexer
         time_out : out std_logic_vector(23 downto 0) := (others => '0')
