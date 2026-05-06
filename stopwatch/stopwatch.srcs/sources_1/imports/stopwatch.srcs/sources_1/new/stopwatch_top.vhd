@@ -12,7 +12,8 @@ entity stopwatch_top is
         
         seg   : out STD_LOGIC_VECTOR (6 downto 0);
         an    : out STD_LOGIC_VECTOR (7 downto 0);
-        dp    : out STD_LOGIC
+        dp    : out STD_LOGIC;
+        led_16g : out STD_LOGIC
     );
 end stopwatch_top;
 ----------------------------------------------------------------------------------
@@ -217,5 +218,5 @@ begin
             seg     => seg,
             anode   => an
         );
-
+    led_16g <= sig_btn_lap;
 end Structural;
