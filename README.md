@@ -46,5 +46,19 @@ In the first phase we fill up all 9 slots of the memory array in the lap registe
 
 Firstly, we reset the component and its internal clock enable counters by holding the `rst` line HIGH. Then, we test the standard stopwatch display mode by feeding a 24-bit hex test value (e.g., x"123456") into the `time_in` while leaving the `lap_ptr` at 0. The waveform confirms that the multiplexing works correctly: the anode output continuously sweeps through active-low states (fe, fd, fb, etc.) to sequentially enable each digit. Simultaneously, the `seg` output accurately decodes the corresponding 4-bit slice of the input data, and the `dp` output pulses LOW at the correct intervals to format the time as mm.ss.ss. In the last part of the simulation, we test the lap-viewing functionality by inputting a new time value and setting the `lap_ptr` to a non-zero value (e.g., 3). The simulation proves that the driver correctly handles this by activating the uppermost anodes to display the 'L' character on the leftmost digit and the requested lap number next to it. 
 
+# Resource report
+| Type          | Amount        |
+| ------------- | ------------- |
+| Look-up table | 331           |
+| Flip-flops    | 491           |
+
+# Tools
+1. [Online VHDL Testbench generator](https://vhdl.lapinoo.net/)
+2. AMD Vivado design suite
+3. Visual Studio Code
+4. TerosHDL plugin for VS Code1
+5. draw.io
+6. Inkscape
+
 
 
