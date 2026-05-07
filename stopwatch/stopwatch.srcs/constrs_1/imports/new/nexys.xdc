@@ -45,6 +45,3 @@ set_property PACKAGE_PIN K2  [get_ports {an[6]}];
 set_property PACKAGE_PIN U13 [get_ports {an[7]}];
 set_property IOSTANDARD LVCMOS33 [get_ports {an[*]}]
 
-
-# LED to signal saving lap
-set_property -dict { PACKAGE_PIN M16 IOSTANDARD LVCMOS33 } [get_ports {led16_g}];
