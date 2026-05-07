@@ -1,5 +1,5 @@
 # Group project: Digital stopwatch
-This group project will implement a digital stopwatch using VHDL and a Nexys A7-50T FPGA dev board. The stopwatch measures time with accuracy to hundredths of a second with a function to store laps. [Poster](./res/poster-DE1.pdf)
+This group project will implement a digital stopwatch using VHDL and a Nexys A7-50T FPGA dev board. The stopwatch measures time with accuracy to hundredths of a second with a function to store laps. [Poster](./res/poster-DE1.pdf) [Demo video](https://youtu.be/E1TczmW9LcU)
 
 # Group members
 - Tomáš Kovařík
